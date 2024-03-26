@@ -120,3 +120,59 @@ button {
 button:hover {
     background-color: #45a049;
 }
+
+#timer-display {
+    font-size: 2em;
+    margin: 10px;
+    text-align: center;
+}
+
+#end-game-button {
+    background-color: #dc3545; /* Red */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+#end-game-button:hover {
+    background-color: #dc3545
+}
+
+#end-game-button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.return-home-button {
+    background-color: #007bff; /* Blue */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    display: block; /* Center the button */
+    margin: 20px auto; /* Adds margin on the top and bottom, and auto on the sides for centering */
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.return-home-button:hover {
+    background-color: #0056b3; /* Darker blue */
+}

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game Recap - Smart Sport Monitor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <main>
+        <h2>Game Recap</h2>
+        <p>Player 1: {{ game_data.player1 }}</p>
+        <p>Player 2: {{ game_data.player2 }}</p>
+        <p>Time Elapsed: {{ game_data.elapsed_time }}</p>
+
+        <button onclick="window.location.href='/'" class="return-home-button">Return Home</button>
+    </main>
+</body>
+</html>

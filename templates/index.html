@@ -15,6 +15,16 @@
     </header>
 
     <main>
+        <!-- Timer Display -->
+        <section id="timer" class="card" style="{{ 'display: none;' if not game_started }}">
+            <h2>Game Timer</h2>
+            <p>Time Elapsed: <span id="time-elapsed">00:00</span></p>
+            <span id="start-time" style="display:none;">{{ session.get('start_time', 0) }}</span>
+            <span id="game-started" style="display:none;">{{ game_started }}</span>
+        </section>
+
+        <button id="end-game-button" onclick="endGame()">End Game</button>
+
         <section id="players" class="card">
             <h2>Players</h2>
             <p>Player 1: {{ player1 }}</p>
