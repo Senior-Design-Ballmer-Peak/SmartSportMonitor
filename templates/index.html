@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Sport Monitor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Smart Sport Monitor</h1>
+        <nav>
+            <!-- Navigation links, if any -->
+        </nav>
+    </header>
+
+    <main>
+        <section id="scoreboard" class="card">
+            <h2>Live Scoreboard</h2>
+            <p>Current Score: <span id="current-score">0</span></p>
+        </section>
+
+        <section id="puck-speed" class="card">
+            <h2>Puck Speed</h2>
+            <p>Speed: <span id="speed-value">0</span> km/h</p>
+        </section>
+
+        <section id="live-feed" class="card">
+            <h2>Live Feed</h2>
+            <div class="video-wrapper">
+                <!-- Live feed will be embedded here -->
+            </div>
+        </section>
+
+        <section id="analytics" class="card">
+            <h2>Game Analytics</h2>
+            <!-- Analytics details will be updated here -->
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Smart Sport Monitor</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
