@@ -10,11 +10,17 @@
     <header>
         <h1>Smart Sport Monitor</h1>
         <nav>
-            <!-- Navigation links, if any -->
+            <button onclick="window.location.href='/start_game'">Start Game</button>
         </nav>
     </header>
 
     <main>
+        <section id="players" class="card">
+            <h2>Players</h2>
+            <p>Player 1: {{ player1 }}</p>
+            <p>Player 2: {{ player2 }}</p>
+        </section>
+
         <section id="scoreboard" class="card">
             <h2>Live Scoreboard</h2>
             <p>Current Score: <span id="current-score">0</span></p>
