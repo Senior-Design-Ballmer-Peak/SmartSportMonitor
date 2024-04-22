@@ -10,7 +10,11 @@
     <header>
         <h1>Smart Sport Monitor</h1>
         <nav>
+            {% if game_started %}
+            <button id="end-game-button" onclick="endGame()">End Game</button>
+            {% else %}
             <button onclick="window.location.href='/start_game'">Start Game</button>
+            {% endif %}
         </nav>
     </header>
 
@@ -23,12 +27,10 @@
             <span id="game-started" style="display:none;">{{ game_started }}</span>
         </section>
 
-        <button id="end-game-button" onclick="endGame()">End Game</button>
-
-        <section id="players" class="card">
+         <section id="players" class="card">
             <h2>Players</h2>
-            <p>Player 1: {{ player1 }}</p>
-            <p>Player 2: {{ player2 }}</p>
+            <p>Player 1: {% if player1 %}{{ player1 }}{% else %}No one{% endif %}</p>
+            <p>Player 2: {% if player2 %}{{ player2 }}{% else %}No one{% endif %}</p>
         </section>
 
         <section id="scoreboard" class="card">
@@ -38,14 +40,7 @@
 
         <section id="puck-speed" class="card">
             <h2>Puck Speed</h2>
-            <p>Speed: <span id="speed-value">0</span> km/h</p>
-        </section>
-
-        <section id="live-feed" class="card">
-            <h2>Live Feed</h2>
-            <div class="video-wrapper">
-                <!-- Live feed will be embedded here -->
-            </div>
+            <p>Speed: <span id="speed-value">0</span> mm/s</p>
         </section>
 
         <section id="analytics" class="card">

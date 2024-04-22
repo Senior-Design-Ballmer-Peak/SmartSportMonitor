@@ -8,8 +8,8 @@ app.secret_key = 'your_secret_key'  # Set a secret key for sessions
 @app.route('/')
 def index():
     # Get player names and game state from the session
-    player1 = session.get('player1', 'Player 1')
-    player2 = session.get('player2', 'Player 2')
+    player1 = session.get('player1')
+    player2 = session.get('player2')
     game_started = session.get('game_started', False)
     return render_template('index.html', player1=player1, player2=player2, game_started=game_started)
 
@@ -39,6 +39,10 @@ def end_game():
         'player2': session.get('player2', 'Unknown Player 2'),
         'elapsed_time': elapsed_time  # store the elapsed time in seconds
     }
+
+    # Reset player names and game state
+    session.pop('player1', None)
+    session.pop('player2', None)
     session['game_started'] = False  # mark the game as ended
 
     return jsonify({'success': True}), 200

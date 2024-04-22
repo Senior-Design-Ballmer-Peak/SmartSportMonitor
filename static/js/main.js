@@ -12,9 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Setup WebSocket or AJAX long polling to update scores and puck speed
     // ...
 
-    // For live feed, you might need to use WebRTC or another technology
-    // depending on how you're planning to stream the video
-
     // Call update functions periodically or on events
     updateScores();
     updatePuckSpeed();
