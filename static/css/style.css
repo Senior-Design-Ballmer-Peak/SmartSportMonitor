@@ -255,3 +255,109 @@ body {
 .return-home-button:hover {
     background-color: #2980b9;
 }
+/* Reset some default styles */
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body, h1, h2, h3, p, ul, li, button {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+
+/* Apply a natural box layout model to all elements */
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  font-size: 18px; /* Larger base font size */
+  background: #f4f4f4;
+  color: #333;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px; /* Maximum width of the container */
+  margin: 20px auto; /* Center the container */
+  padding: 0 20px;
+}
+
+.main-header,
+.main-footer {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.main-header h1,
+.main-footer p {
+  margin: 0;
+  font-size: 2.5em; /* Larger text for headers */
+}
+
+.main-content h2 {
+  font-size: 2em; /* Larger text for section titles */
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.card {
+  background: #fff;
+  padding: 40px; /* More padding for better readability */
+  margin-bottom: 20px; /* More margin for spacing out elements */
+  border-radius: 8px; /* Rounded corners for modern look */
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+}
+
+.btn-main, .return-home-button {
+  display: inline-block;
+  font-size: 1.2em; /* Larger button text */
+  color: #fff;
+  background: #5cb85c;
+  padding: 15px 30px; /* Larger padding for a bigger button */
+  border: none;
+  border-radius: 8px; /* Consistent rounded corners */
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-main:hover,
+.return-home-button:hover {
+  background: #449d44; /* Slightly darker on hover for feedback */
+}
+
+/* Style for the winner and specific stats */
+.winner, .recap-info p {
+  font-size: 1.4em; /* Larger text for important info */
+}
+
+/* Specific leaderboard styles */
+#leaderboard-list li {
+  font-size: 1.2em; /* Larger text for leaderboard items */
+}
+
+/* Responsive design adjustments */
+@media only screen and (max-width: 700px) {
+  .container {
+    width: 95%;
+    padding: 0 10px;
+  }
+
+  .main-header h1,
+  .main-footer p {
+    font-size: 2em; /* Slightly smaller text for very small screens */
+  }
+
+  .main-content h2 {
+    font-size: 1.5em;
+  }
+
+  .card {
+    padding: 20px; /* Less padding on very small screens */
+  }
+}

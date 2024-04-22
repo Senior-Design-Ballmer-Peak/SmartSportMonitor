@@ -1,9 +1,20 @@
 import time
-
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import db
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for sessions
+
+# Use the 'certificate' function to load your Firebase service account
+cred = credentials.Certificate('/Users/charleswilmot/Documents/GitHub/SmartSportMonitor/ssm-csu-firebase-adminsdk-qvu64-a7af4114b9.json')
+firebase_admin.initialize_app(cred)
+
+# Initialize your Firebase instance with the credentials
+firebase_admin.initialize_app(cred, {
+    'databaseURL': 'https://ssm-csu-default-rtdb.firebaseio.com'
+})
 
 @app.route('/')
 def index():
@@ -79,6 +90,60 @@ def live_feed():
 def replay():
     # Use OpenCV or another library to capture replays
     pass
+
+@app.route('/get_active_game')
+def get_active_game():
+    ref = db.reference('game_data/active_game')
+    active_game = ref.get()
+    return jsonify(active_game=active_game)
+
+@app.route('/get_scores')
+def get_scores():
+    scores_ref = db.reference('game_data')
+    scores = scores_ref.get()
+    return jsonify(p1=scores['p1'], p2=scores['p2'])
+
+@app.route('/get_puck_in_frame')
+def get_puck_in_frame():
+    ref = db.reference('game_data/puck_in_frame')
+    puck_in_frame = ref.get()
+    return jsonify(puck_in_frame=puck_in_frame)
+
+@app.route('/get_puck_speed')
+def get_puck_speed():
+    ref = db.reference('game_data/puck_speed')
+    puck_speed = ref.get()
+    return jsonify(puck_speed=puck_speed)
+
+@app.route('/game_data/in_frame')
+def get_in_frame():
+    ref = db.reference('game_data/in_frame')
+    in_frame = ref.get()
+    return jsonify(in_frame=in_frame)
+
+@app.route('/game_data/rad')
+def get_rad():
+    ref = db.reference('game_data/rad')
+    rad = ref.get()
+    return jsonify(rad=rad)
+
+@app.route('/game_data/speed')
+def get_speed():
+    ref = db.reference('game_data/speed')
+    speed = ref.get()
+    return jsonify(speed=speed)
+
+@app.route('/game_data/x')
+def get_x():
+    ref = db.reference('game_data/x')
+    x = ref.get()
+    return jsonify(x=x)
+
+@app.route('/game_data/y')
+def get_y():
+    ref = db.reference('game_data/y')
+    y = ref.get()
+    return jsonify(y=y)
 
 if __name__ == '__main__':
     app.run(debug=True)
