@@ -54,11 +54,48 @@
             <p>Current Score: <span id="current-score">0</span></p>
         </section>
 
-        <!-- Puck Speed Section -->
+        <!-- New Firebase Data Sections -->
+        <section id="active-game" class="card">
+            <h2>Active Game</h2>
+            <p id="active-game-value">{{ active_game }}</p>
+        </section>
+
+        <section id="puck-in-frame" class="card">
+            <h2>Puck in Frame</h2>
+            <p id="puck-in-frame-value">{{ puck_in_frame }}</p>
+        </section>
+
+        <section id="rad" class="card">
+            <h2>Radius</h2>
+            <p id="rad-value">{{ rad }}</p>
+        </section>
+
         <section id="puck-speed" class="card">
             <h2>Puck Speed</h2>
-            <p>Speed: <span id="speed-value">0</span> m/s</p>
+            <p id="puck-speed-value">{{ puck_speed }}</p>
         </section>
+
+        <!-- Add sections for in_frame, speed, x, and y -->
+        <section id="in-frame" class="card">
+            <h2>In Frame</h2>
+            <p id="in-frame-value">{{ in_frame }}</p>
+        </section>
+
+        <section id="speed" class="card">
+            <h2>Speed</h2>
+            <p id="speed-value">{{ speed }}</p>
+        </section>
+
+        <section id="x" class="card">
+            <h2>X Position</h2>
+            <p id="x-value">{{ x }}</p>
+        </section>
+
+        <section id="y" class="card">
+            <h2>Y Position</h2>
+            <p id="y-value">{{ y }}</p>
+        </section>
+
         {% endif %}
     </main>
 

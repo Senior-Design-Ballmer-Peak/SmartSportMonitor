@@ -94,3 +94,52 @@ document.getElementById('start-game-form').addEventListener('submit', function(e
         event.preventDefault(); // Prevent form from submitting
     }
 });
+
+// In your main.js or inline within index.html
+function fetchData() {
+  // Active game status
+  fetch('/get_active_game').then(response => response.json()).then(data => {
+    document.getElementById('active-game-value').textContent = data.active_game;
+  });
+
+  // Puck in frame status
+  fetch('/get_puck_in_frame').then(response => response.json()).then(data => {
+    document.getElementById('puck-in-frame-value').textContent = data.puck_in_frame;
+  });
+
+  // Radius
+  fetch('/game_data/rad').then(response => response.json()).then(data => {
+    document.getElementById('rad-value').textContent = data.rad;
+  });
+
+  // Puck speed
+  fetch('/get_puck_speed').then(response => response.json()).then(data => {
+    document.getElementById('puck-speed-value').textContent = data.puck_speed;
+  });
+
+  // In frame
+  fetch('/game_data/in_frame').then(response => response.json()).then(data => {
+    document.getElementById('in-frame-value').textContent = data.in_frame;
+  });
+
+  // Speed
+  fetch('/game_data/speed').then(response => response.json()).then(data => {
+    document.getElementById('speed-value').textContent = data.speed;
+  });
+
+  // X position
+  fetch('/game_data/x').then(response => response.json()).then(data => {
+    document.getElementById('x-value').textContent = data.x;
+  });
+
+  // Y position
+  fetch('/game_data/y').then(response => response.json()).then(data => {
+    document.getElementById('y-value').textContent = data.y;
+  });
+
+  // Re-run this function every 5 seconds
+  setTimeout(fetchData, 5000);
+}
+
+// Start polling when the page loads
+document.addEventListener('DOMContentLoaded', fetchData);

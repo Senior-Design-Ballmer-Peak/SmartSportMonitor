@@ -9,7 +9,6 @@ app.secret_key = 'your_secret_key'  # Set a secret key for sessions
 
 # Use the 'certificate' function to load your Firebase service account
 cred = credentials.Certificate('/Users/charleswilmot/Documents/GitHub/SmartSportMonitor/ssm-csu-firebase-adminsdk-qvu64-a7af4114b9.json')
-firebase_admin.initialize_app(cred)
 
 # Initialize your Firebase instance with the credentials
 firebase_admin.initialize_app(cred, {
@@ -18,12 +17,33 @@ firebase_admin.initialize_app(cred, {
 
 @app.route('/')
 def index():
-    # Get player names and game state from the session
-    player1 = session.get('player1')
-    player2 = session.get('player2')
     game_started = session.get('game_started', False)
-    return render_template('index.html', player1=player1, player2=player2, game_started=game_started)
 
+    # Initialize a context dictionary with default values
+    context = {
+        'player1': session.get('player1', 'No one'),
+        'player2': session.get('player2', 'No one'),
+        'game_started': game_started,
+        'active_game': False,
+        'p1': 0,
+        'p2': 0,
+        'puck_in_frame': False,
+        'puck_speed': 0,
+        'in_frame': False,
+        'rad': 0,
+        'speed': 0,
+        'x': 0,
+        'y': 0
+    }
+
+    if game_started:
+        # Fetch all game data from Firebase if a game is active
+        game_data_ref = db.reference('game_data')
+        game_data = game_data_ref.get()
+        if game_data:  # If game_data is not None
+            context.update(game_data)
+
+    return render_template('index.html', **context)
 
 @app.route('/start_game', methods=['GET', 'POST'])
 def start_game():
@@ -80,22 +100,12 @@ def puck_speed():
     # Endpoint to update puck speed, should accept data and update the speed variable
     pass
 
-@app.route('/live_feed')
-def live_feed():
-    # Use OpenCV or another library to capture live feed and stream
-    pass
-
-
-@app.route('/replay')
-def replay():
-    # Use OpenCV or another library to capture replays
-    pass
-
 @app.route('/get_active_game')
 def get_active_game():
     ref = db.reference('game_data/active_game')
     active_game = ref.get()
-    return jsonify(active_game=active_game)
+    return jsonify({'active_game': active_game})
+
 
 @app.route('/get_scores')
 def get_scores():
