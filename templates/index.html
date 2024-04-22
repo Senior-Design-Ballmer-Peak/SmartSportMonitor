@@ -7,18 +7,31 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <header>
+    <header class="main-header">
         <h1>Smart Sport Monitor</h1>
         <nav>
             {% if game_started %}
-            <button id="end-game-button" onclick="endGame()">End Game</button>
+            <button id="end-game-button" onclick="endGame()" class="btn-main">End Game</button>
             {% else %}
-            <button onclick="window.location.href='/start_game'">Start Game</button>
+            <button onclick="window.location.href='/start_game'" class="btn-main">Start Game</button>
             {% endif %}
         </nav>
     </header>
 
-    <main>
+    <main class="main-content">
+        <!-- Leaderboard -->
+        {% if not game_started %}
+        <section id="leaderboard" class="card">
+            <h2>Leaderboard</h2>
+            <ul id="leaderboard-list">
+                <!-- Dynamically populated leaderboard entries -->
+                {% for player, score in leaderboard %}
+                    <li>{{ player }}: {{ score }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+
         <!-- Timer Display -->
         <section id="timer" class="card" style="{{ 'display: none;' if not game_started }}">
             <h2>Game Timer</h2>
@@ -27,29 +40,29 @@
             <span id="game-started" style="display:none;">{{ game_started }}</span>
         </section>
 
-         <section id="players" class="card">
+        {% if game_started %}
+        <!-- Player Section -->
+        <section id="players" class="card">
             <h2>Players</h2>
-            <p>Player 1: {% if player1 %}{{ player1 }}{% else %}No one{% endif %}</p>
-            <p>Player 2: {% if player2 %}{{ player2 }}{% else %}No one{% endif %}</p>
+            <p>Player 1: {{ player1 or 'No one' }}</p>
+            <p>Player 2: {{ player2 or 'No one' }}</p>
         </section>
 
+        <!-- Scoreboard Section -->
         <section id="scoreboard" class="card">
             <h2>Live Scoreboard</h2>
             <p>Current Score: <span id="current-score">0</span></p>
         </section>
 
+        <!-- Puck Speed Section -->
         <section id="puck-speed" class="card">
             <h2>Puck Speed</h2>
-            <p>Speed: <span id="speed-value">0</span> mm/s</p>
+            <p>Speed: <span id="speed-value">0</span> m/s</p>
         </section>
-
-        <section id="analytics" class="card">
-            <h2>Game Analytics</h2>
-            <!-- Analytics details will be updated here -->
-        </section>
+        {% endif %}
     </main>
 
-    <footer>
+    <footer class="main-footer">
         <p>&copy; 2024 Smart Sport Monitor</p>
     </footer>
 

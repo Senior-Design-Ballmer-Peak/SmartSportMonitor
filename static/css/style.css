@@ -176,3 +176,82 @@ button:hover {
 .return-home-button:hover {
     background-color: #0056b3; /* Darker blue */
 }
+
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.main-header {
+    background-color: #222;
+    color: #fff;
+    padding: 1em 2em;
+    text-align: center;
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1em;
+    padding: 1em;
+}
+
+.card {
+    background-color: #fff;
+    padding: 1em;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.btn-main {
+    background-color: #5cb85c;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.btn-main:hover {
+    background-color: #4cae4c;
+}
+
+.main-footer {
+    text-align: center;
+    padding: 1em;
+    background-color: #222;
+    color: white;
+}
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.recap-info {
+    margin-bottom: 20px;
+}
+
+.winner {
+    font-size: 1.2em;
+    color: #2ecc71;
+}
+
+.return-home-button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.return-home-button:hover {
+    background-color: #2980b9;
+}

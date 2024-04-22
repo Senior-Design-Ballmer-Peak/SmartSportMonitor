@@ -84,3 +84,13 @@ document.addEventListener('DOMContentLoaded', function() {
         return minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
     }
 });
+
+document.getElementById('start-game-form').addEventListener('submit', function(event) {
+    var player1 = document.getElementById('player1').value.trim();
+    var player2 = document.getElementById('player2').value.trim();
+
+    if (player1 === '' || player2 === '') {
+        alert('Please enter names for both players.');
+        event.preventDefault(); // Prevent form from submitting
+    }
+});
