@@ -89,71 +89,26 @@ def game_recap():
         flash('No game to recap.', 'error')
         return redirect(url_for('index'))
 
-
-@app.route('/score')
-def score():
-    # Endpoint to update score, should accept data and update the score variable
-    pass
-
-@app.route('/puck_speed')
-def puck_speed():
-    # Endpoint to update puck speed, should accept data and update the speed variable
-    pass
-
 @app.route('/get_active_game')
 def get_active_game():
     ref = db.reference('game_data/active_game')
     active_game = ref.get()
     return jsonify({'active_game': active_game})
 
+@app.route('/get_p1')
+def get_p1():
+    p1 = db.reference('game_data/p1')
+    return jsonify({'p1': p1})
 
-@app.route('/get_scores')
-def get_scores():
-    scores_ref = db.reference('game_data')
-    scores = scores_ref.get()
-    return jsonify(p1=scores['p1'], p2=scores['p2'])
+@app.route('/get_p2')
+def get_p2():
+    p2 = db.reference('game_data/p2')
+    return jsonify({'p2': p2})
 
-@app.route('/get_puck_in_frame')
-def get_puck_in_frame():
-    ref = db.reference('game_data/puck_in_frame')
-    puck_in_frame = ref.get()
-    return jsonify(puck_in_frame=puck_in_frame)
-
-@app.route('/get_puck_speed')
-def get_puck_speed():
-    ref = db.reference('game_data/puck_speed')
-    puck_speed = ref.get()
-    return jsonify(puck_speed=puck_speed)
-
-@app.route('/game_data/in_frame')
-def get_in_frame():
-    ref = db.reference('game_data/in_frame')
-    in_frame = ref.get()
-    return jsonify(in_frame=in_frame)
-
-@app.route('/game_data/rad')
-def get_rad():
-    ref = db.reference('game_data/rad')
-    rad = ref.get()
-    return jsonify(rad=rad)
-
-@app.route('/game_data/speed')
+@app.route('/get_speed')
 def get_speed():
-    ref = db.reference('game_data/speed')
-    speed = ref.get()
-    return jsonify(speed=speed)
-
-@app.route('/game_data/x')
-def get_x():
-    ref = db.reference('game_data/x')
-    x = ref.get()
-    return jsonify(x=x)
-
-@app.route('/game_data/y')
-def get_y():
-    ref = db.reference('game_data/y')
-    y = ref.get()
-    return jsonify(y=y)
+    speed = db.reference('game_data/speed')
+    return jsonify({'speed': speed})
 
 if __name__ == '__main__':
     app.run(debug=True)
