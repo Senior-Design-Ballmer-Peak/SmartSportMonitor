@@ -95,15 +95,15 @@ def get_active_game():
     active_game = ref.get()
     return jsonify({'active_game': active_game})
 
-@app.route('/get_p1')
-def get_p1():
-    p1 = db.reference('game_data/p1')
-    return jsonify({'p1': p1})
-
-@app.route('/get_p2')
-def get_p2():
-    p2 = db.reference('game_data/p2')
-    return jsonify({'p2': p2})
+# @app.route('/get_p1')
+# def get_p1():
+#     p1 = db.reference('game_data/p1')
+#     return jsonify({'p1': p1})
+#
+# @app.route('/get_p2')
+# def get_p2():
+#     p2 = db.reference('game_data/p2')
+#     return jsonify({'p2': p2})
 
 @app.route('/get_speed')
 def get_speed():

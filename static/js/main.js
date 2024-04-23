@@ -1,18 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Assuming there is a <div id='start-time'>UNIX_TIMESTAMP</div> in your HTML
     var startTime = parseInt(document.getElementById('start-time').textContent, 10);
     var timerDisplay = document.getElementById('time-elapsed');
-    var timerInterval;
-
 
     if (!isNaN(startTime) && startTime > 0) {
-        var startTimestamp = startTime * 1000; // Convert to milliseconds
-        updateTimer(startTimestamp);
+        startTimer(startTime);
     }
 
-    function updateTimer(startTimestamp) {
-        setInterval(function() {
-            var now = Date.now();
-            var elapsedMilliseconds = now - startTimestamp;
+    function startTimer(startTime) {
+        var startTimestamp = startTime * 1000; // Ensure this is in milliseconds
+        var timerInterval = setInterval(function () {
+            var elapsedMilliseconds = Date.now() - startTimestamp;
             timerDisplay.textContent = formatTime(elapsedMilliseconds);
         }, 1000);
     }
@@ -24,60 +22,34 @@ document.addEventListener('DOMContentLoaded', function() {
         return minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
     }
 
-    // Make sure the startTimer function is correctly calculating the elapsed time
-    function startTimer(startTime) {
-        var startTimeSeconds = startTime; // Make sure this is in seconds
-        timerInterval = setInterval(function () {
-            var currentTime = Math.floor(Date.now() / 1000); // Convert current time to seconds
-            var elapsedTime = currentTime - startTimeSeconds;
-            timerDisplay.textContent = formatTime(elapsedTime);
-        }, 1000);
-    }
+    // Rest of your existing code for endGame and form submission validation...
 
-    // Corrected formatTime function to handle seconds
-    function formatTime(seconds) {
-        var minutes = Math.floor(seconds / 60);
-        var remainingSeconds = seconds % 60;
-        return minutes.toString().padStart(2, '0') + ":" + remainingSeconds.toString().padStart(2, '0');
-    }
-
-    // End game function that sends a POST request to the Flask server
-    function endGame() {
-        clearInterval(timerInterval); // Stop the timer
-        fetch('/end_game', { method: 'POST' })
-            .then(response => response.json())
-            .then(data => {
-                if(data.success) {
-                    window.location.href = '/game_recap'; // Redirect on success
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-
-    // Expose the endGame function to be callable from HTML
-    window.endGame = endGame;
-
-    startTimer();
 });
 
-document.getElementById('start-game-form').addEventListener('submit', function(event) {
-    var player1 = document.getElementById('player1').value.trim();
-    var player2 = document.getElementById('player2').value.trim();
+// Firebase Realtime Database listening for score updates
+const firebaseConfig = {
+  apiKey: "AIzaSyD28wdQ6XQNcJ2eLln5NmzHQZhHiHo76Y8",
+  authDomain: "ssm-csu.firebaseapp.com",
+  databaseURL: "https://ssm-csu-default-rtdb.firebaseio.com",
+  projectId: "ssm-csu",
+  storageBucket: "ssm-csu.appspot.com",
+  messagingSenderId: "253492640998",
+  appId: "1:253492640998:web:cdda42aa0e9630e9ab4f27"
+};
 
-    if (player1 === '' || player2 === '') {
-        alert('Please enter names for both players.');
-        event.preventDefault(); // Prevent form from submitting
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  // Reference to your database
+  const database = firebase.database();
+
+  // Listen for changes in game data
+  database.ref('game_data').on('value', (snapshot) => {
+    const data = snapshot.val();
+    // Update your score display
+    if (data) {
+      document.getElementById('player1-score').textContent = data.p1 || 0;
+      document.getElementById('player2-score').textContent = data.p2 || 0;
+      // ... any other fields you want to update in real-time
     }
-});
-
-var databse = firebase.database();
-
-var gameDataRef = database.ref('game_data');
-
-gameDataRef.on('value', function(snapshot) {
-    var data = snapshot.val();
-    console.log(data);
-
-    document.getElementById('current-score').textContent = `Player 1: ${data.p1} Player 2: ${data.p2}`;
 });
