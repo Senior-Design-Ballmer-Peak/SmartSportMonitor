@@ -58,7 +58,7 @@ struct HomeView: View {
                 
                 List {
                     ForEach(games) { game in
-                        Section(header: Text(formatDate(game.date))) {
+                        Section(header: Text("\(formatDate(game.date)) - \(game.time_elapsed) seconds")) {
                             VStack(alignment: .leading, spacing: 10) {
                                 HStack {
                                     Text(game.p1_name)

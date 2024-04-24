@@ -12,14 +12,25 @@ import FirebaseDatabaseInternal
 class GameController: ObservableObject {
     let fs = Firestore.firestore()
     var ref = Database.database().reference()
-    var activeGame = false
+    
+    @Published var activeGame = false
     var time_start = Date().timeIntervalSince1970
     var p1_name = ""
     var p2_name = ""
+    private var timer: Timer?
+    
     @Published var p1_score = 0
     @Published var p2_score = 0
-    @Published var speed = 0
+    @Published var x = 0
+    @Published var y = 0
+    @Published var speed = 0.0
     @Published var puck_in_frame = false
+    @Published var timeElapsed: TimeInterval = 0
+    
+    private var rallyStart: Date = Date()
+    private var rallies: [Int] = []
+    
+    private var puckTimer: Timer?
     
     func getHistory(completion: @escaping ([Game]) -> Void) {
         fs.collection("history").order(by: "date").getDocuments { (querySnapshot, error) in
@@ -54,6 +65,9 @@ class GameController: ObservableObject {
     func startGame(p1_name: String, p2_name: String) {
         self.p1_name = p1_name
         self.p2_name = p2_name
+        resetScore()
+        time_start = Date().timeIntervalSince1970
+        startTimer()
         activeGame = true
     }
     
@@ -66,6 +80,7 @@ class GameController: ObservableObject {
                         date: Date().ISO8601Format()
         )
         
+        stopTimer()
         fs.collection("history").addDocument(data: game.dictionary)
         activeGame = false
     }
@@ -92,7 +107,7 @@ class GameController: ObservableObject {
     
     private func observeSpeed() {
         ref.child("/game_data/speed").observe(.value) { snapshot in
-            if let speed = snapshot.value as? Int {
+            if let speed = snapshot.value as? Double {
                 self.speed = speed
             }
         }
@@ -102,7 +117,90 @@ class GameController: ObservableObject {
         ref.child("/game_data/in_frame").observe(.value) { snapshot in
             if let puckInFrame = snapshot.value as? Bool {
                 self.puck_in_frame = puckInFrame
+                if !puckInFrame {
+                    self.startPuckTimer()
+                } else {
+                    self.stopPuckTimer()
+                }
             }
         }
+    }
+    
+    private func observeXY() {
+        ref.child("/game_data/x").observe(.value) { snapshot in
+            if let x_data = snapshot.value as? Int {
+                self.x = x_data
+            }
+        }
+        ref.child("/game_data/y").observe(.value) { snapshot in
+            if let y_data = snapshot.value as? Int {
+                self.y = y_data
+            }
+        }
+    }
+    
+    private func startPuckTimer() {
+        stopPuckTimer()
+        
+        puckTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in
+            
+            if self.y > 1000 {
+                self.addScoreToP1()
+            } else {
+                self.addScoreToP2()
+            }
+        }
+    }
+    
+    private func stopPuckTimer() {
+        puckTimer?.invalidate()
+        puckTimer = nil
+    }
+    
+    func addScoreToP1(_ subtract: Bool = false) {
+        DispatchQueue.main.async {
+            if subtract {
+                self.p1_score -= 1
+            } else {
+                self.p1_score += 1
+            }            
+            self.ref.child("/game_data/p1").setValue(self.p1_score)
+        }
+    }
+    
+    func addScoreToP2(_ subtract: Bool = false) {
+        DispatchQueue.main.async {
+            if subtract {
+                self.p2_score -= 1
+            } else {
+                self.p2_score += 1
+            }
+            self.ref.child("/game_data/p2").setValue(self.p2_score)
+        }
+    }
+    
+    func resetScore() {
+        DispatchQueue.main.async {
+            self.p2_score = 0
+            self.p2_score = 0
+            self.speed = 0
+            self.ref.child("/game_data/p1").setValue(self.p1_score)
+            self.ref.child("/game_data/p2").setValue(self.p2_score)
+            self.ref.child("/game_data/speed").setValue(self.speed)
+        }
+    }
+    
+    private func startTimer() {
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.timeElapsed = Date().timeIntervalSince1970 - self.time_start
+            }
+        }
+    }
+    
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
     }
 }

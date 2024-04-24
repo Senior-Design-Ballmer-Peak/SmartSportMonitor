@@ -10,6 +10,8 @@ import SwiftUI
 struct GameView: View {
     @ObservedObject var gc: GameController
     @Environment(\.presentationMode) var presentationMode
+    @State private var showAlertP1 = false
+    @State private var showAlertP2 = false
     
     var body: some View {
         VStack(spacing: 20) {
@@ -24,6 +26,26 @@ struct GameView: View {
                     Text("\(gc.p1_score)")
                         .font(.custom("SCOREBOARD", size: 120))
                         .foregroundColor(.blue)
+                    
+                    HStack {
+                        Button {
+                            gc.addScoreToP1()
+                        } label: {
+                            Image(systemName: "plus.square.fill")
+                                .font(.title)
+                                .foregroundColor(.blue)
+                        }
+                        .buttonStyle(BorderlessButtonStyle())
+                        
+                        Button {
+                            gc.addScoreToP1(true)
+                        } label: {
+                            Image(systemName: "minus.square.fill")
+                                .font(.title)
+                                .foregroundColor(.blue)
+                        }
+                        .buttonStyle(BorderlessButtonStyle())
+                    }
                 }
                 
                 VStack {
@@ -32,6 +54,26 @@ struct GameView: View {
                     Text("\(gc.p2_score)")
                         .font(.custom("SCOREBOARD", size: 120))
                         .foregroundColor(.red)
+                    
+                    HStack {
+                        Button {
+                            gc.addScoreToP2()
+                        } label: {
+                            Image(systemName: "plus.square.fill")
+                                .font(.title)
+                                .foregroundColor(.red)
+                        }
+                        .buttonStyle(BorderlessButtonStyle())
+
+                        Button {
+                            gc.addScoreToP2(true)
+                        } label: {
+                            Image(systemName: "minus.square.fill")
+                                .font(.title)
+                                .foregroundColor(.red)
+                        }
+                        .buttonStyle(BorderlessButtonStyle())
+                    }
                 }
             }
             
@@ -42,30 +84,84 @@ struct GameView: View {
                 VStack(alignment: .trailing) {
                     Text("Speed:")
                         .font(.headline)
-                    Text("\(gc.speed)")
-                }
-                Spacer()
-                VStack(alignment: .leading) {
-                    Text("Puck in Frame:")
-                        .font(.headline)
-                    Text("\(gc.puck_in_frame ? "Yes" : "No")")
+                    Text("\(gc.speed) cm/s")
                 }
                 Spacer()
             }
             
-            Button(action: {
-                gc.endGame()
-                presentationMode.wrappedValue.dismiss()
-            }) {
-                Text("End Game")
-                    .font(.title2)
-                    .foregroundColor(.white)
-                    .padding()
-                    .background(Color.red)
-                    .cornerRadius(10)
+            HStack {
+                Spacer()
+                VStack(alignment: .trailing) {
+                    Text("Time Elapsed:")
+                        .font(.headline)
+                    Text("\(Int(Date().timeIntervalSince1970 - gc.time_start)) seconds")
+                        .font(.subheadline)
+                }
+                Spacer()
+            }
+            
+            
+            if gc.activeGame {
+                Button(action: {
+                    gc.endGame()
+                }) {
+                    Text("End Game")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.red)
+                        .cornerRadius(10)
+                }
+            } else {
+                Button {
+                    gc.resetScore()
+                    presentationMode.wrappedValue.dismiss()
+                } label: {
+                    Text("Home")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.blue)
+                        .cornerRadius(10)
+                }
             }
         }
         .padding()
+        .onReceive(gc.$p1_score) { score in
+            showAlertP1 = true
+            dismissAlertAfterDelay(alert: $showAlertP1)
+        }
+        .onReceive(gc.$p2_score) { score in
+            showAlertP2 = true
+            dismissAlertAfterDelay(alert: $showAlertP2)
+        }
+        .alert(isPresented: $showAlertP1) {
+            Alert(
+                title: Text("\(gc.p1_name) Scored!"),
+                message: Text("Ignore if this is correct. \n Speed of Goal: \(gc.speed) cm/s"),
+                dismissButton: .default(Text("Remove Score"), action: {
+                    self.gc.addScoreToP1(true)
+                })
+            )
+        }
+        .alert(isPresented: $showAlertP2) {
+            Alert(
+                title: Text("\(gc.p2_name) Scored!"),
+                message: Text("Ignore if this is correct. \n Speed of Goal: \(gc.speed) cm/s"),
+                dismissButton: .default(Text("Remove Score"), action: {
+                    self.gc.addScoreToP2(true)
+                })
+            )
+        }
+        .navigationBarBackButtonHidden(true)
+    }
+    
+    func dismissAlertAfterDelay(alert: Binding<Bool>) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            withAnimation {
+                alert.wrappedValue = false
+            }
+        }
     }
 }
 
