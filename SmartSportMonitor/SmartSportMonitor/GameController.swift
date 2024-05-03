@@ -29,8 +29,8 @@ class GameController: ObservableObject {
     @Published var puck_in_frame = false
     @Published var timeElapsed: TimeInterval = 0
     
-//    private var rallyStart: Date = Date()
-//    private var rallies: [Int] = []
+    @Published var lastRally: Int = 0
+    @Published var currentRally: Int = 0
     
     private var puckTimer: Timer?
     
@@ -227,25 +227,11 @@ class GameController: ObservableObject {
     }
     
     private func checkScore() {
-        print("------------------------------ 1")
-        print("Winning Score: \(winningScore)")
-        print("P1 Score: \(p1_score)")
-        print("P2 Score: \(p2_score)")
-        print("Game Status: \(activeGame)")
-        print("------------------------------ 1")
-        
         if p1_score == winningScore {
             endGame()
         }
         if p2_score == winningScore {
             endGame()
         }
-        
-        print("------------------------------ 2")
-        print("Winning Score: \(winningScore)")
-        print("P1 Score: \(p1_score)")
-        print("P2 Score: \(p2_score)")
-        print("Game Status: \(activeGame)")
-        print("------------------------------ 2")
     }
 }

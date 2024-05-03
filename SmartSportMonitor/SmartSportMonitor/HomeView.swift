@@ -59,17 +59,34 @@ struct HomeView: View {
                 
                 List {
                     ForEach(games) { game in
-                        Section(header: Text("\(formatDate(game.date)) - \(game.time_elapsed) seconds")) {
-                            VStack(alignment: .leading, spacing: 10) {
-                                HStack {
-                                    Text(game.p1_name)
-                                    Spacer()
-                                    Text("\(game.p1_score)")
+                        if game.p1_score > 0 || game.p2_score > 0 {
+                            Section(header: Text("\(formatDate(game.date)) - Avg. Rally Time: \(game.time_elapsed / (game.p1_score + game.p2_score)) seconds")) {
+                                VStack(alignment: .leading, spacing: 10) {
+                                    HStack {
+                                        Text(game.p1_name)
+                                        Spacer()
+                                        Text("\(game.p1_score)")
+                                    }
+                                    HStack {
+                                        Text(game.p2_name)
+                                        Spacer()
+                                        Text("\(game.p2_score)")
+                                    }
                                 }
-                                HStack {
-                                    Text(game.p2_name)
-                                    Spacer()
-                                    Text("\(game.p2_score)")
+                            }
+                        } else {
+                            Section(header: Text("\(formatDate(game.date)) - \(game.time_elapsed) seconds")) {
+                                VStack(alignment: .leading, spacing: 10) {
+                                    HStack {
+                                        Text(game.p1_name)
+                                        Spacer()
+                                        Text("\(game.p1_score)")
+                                    }
+                                    HStack {
+                                        Text(game.p2_name)
+                                        Spacer()
+                                        Text("\(game.p2_score)")
+                                    }
                                 }
                             }
                         }
