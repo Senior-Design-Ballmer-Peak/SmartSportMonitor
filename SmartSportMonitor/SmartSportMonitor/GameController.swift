@@ -12,6 +12,7 @@ import FirebaseDatabaseInternal
 class GameController: ObservableObject {
     let fs = Firestore.firestore()
     var ref = Database.database().reference()
+    var winningScore: Int = 99999
     
     @Published var activeGame = false
     var time_start = Date().timeIntervalSince1970
@@ -24,11 +25,12 @@ class GameController: ObservableObject {
     @Published var x = 0
     @Published var y = 0
     @Published var speed = 0.0
+    @Published var goalAngle = 0.0
     @Published var puck_in_frame = false
     @Published var timeElapsed: TimeInterval = 0
     
-    private var rallyStart: Date = Date()
-    private var rallies: [Int] = []
+//    private var rallyStart: Date = Date()
+//    private var rallies: [Int] = []
     
     private var puckTimer: Timer?
     
@@ -62,13 +64,18 @@ class GameController: ObservableObject {
         }
     }
         
-    func startGame(p1_name: String, p2_name: String) {
+    func startGame(p1_name: String, p2_name: String, winningScore: Int) {
         self.p1_name = p1_name
         self.p2_name = p2_name
+        if winningScore > 0 {
+            self.winningScore = winningScore
+        }
         resetScore()
         time_start = Date().timeIntervalSince1970
         startTimer()
         activeGame = true
+        
+        print("Game Started")
     }
     
     func endGame() {
@@ -83,12 +90,15 @@ class GameController: ObservableObject {
         stopTimer()
         fs.collection("history").addDocument(data: game.dictionary)
         activeGame = false
+        
+        print("Game Ended")
     }
     
     init() {
         observeScores()
         observeSpeed()
         observePuckInFrame()
+        observeAngle()
     }
     
     private func observeScores() {
@@ -139,6 +149,14 @@ class GameController: ObservableObject {
         }
     }
     
+    private func observeAngle() {
+        ref.child("/game_data/angle").observe(.value) { snapshot in
+            if let angleData = snapshot.value as? Double {
+                self.goalAngle = angleData
+            }
+        }
+    }
+    
     private func startPuckTimer() {
         stopPuckTimer()
         
@@ -165,6 +183,7 @@ class GameController: ObservableObject {
                 self.p1_score += 1
             }            
             self.ref.child("/game_data/p1").setValue(self.p1_score)
+            self.checkScore()
         }
     }
     
@@ -176,6 +195,7 @@ class GameController: ObservableObject {
                 self.p2_score += 1
             }
             self.ref.child("/game_data/p2").setValue(self.p2_score)
+            self.checkScore()
         }
     }
     
@@ -184,9 +204,11 @@ class GameController: ObservableObject {
             self.p2_score = 0
             self.p2_score = 0
             self.speed = 0
+            self.goalAngle = 0
             self.ref.child("/game_data/p1").setValue(self.p1_score)
             self.ref.child("/game_data/p2").setValue(self.p2_score)
             self.ref.child("/game_data/speed").setValue(self.speed)
+            self.ref.child("/game_data/angle").setValue(self.speed)
         }
     }
     
@@ -202,5 +224,28 @@ class GameController: ObservableObject {
     private func stopTimer() {
         timer?.invalidate()
         timer = nil
+    }
+    
+    private func checkScore() {
+        print("------------------------------ 1")
+        print("Winning Score: \(winningScore)")
+        print("P1 Score: \(p1_score)")
+        print("P2 Score: \(p2_score)")
+        print("Game Status: \(activeGame)")
+        print("------------------------------ 1")
+        
+        if p1_score == winningScore {
+            endGame()
+        }
+        if p2_score == winningScore {
+            endGame()
+        }
+        
+        print("------------------------------ 2")
+        print("Winning Score: \(winningScore)")
+        print("P1 Score: \(p1_score)")
+        print("P2 Score: \(p2_score)")
+        print("Game Status: \(activeGame)")
+        print("------------------------------ 2")
     }
 }

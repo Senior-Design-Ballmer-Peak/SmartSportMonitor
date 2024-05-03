@@ -19,6 +19,18 @@ struct GameView: View {
                 .font(.title)
                 .foregroundColor(gc.activeGame ? .green : .red)
             
+            if !gc.activeGame && gc.p1_score > gc.p2_score {
+                Text("\(gc.p1_name) Wins!")
+                    .font(.title)
+            } else if !gc.activeGame && gc.p2_score > gc.p1_score {
+                Text("\(gc.p2_name) Wins!")
+                    .font(.title)
+            } else if !gc.activeGame {
+                Text("\(gc.p1_name) and \(gc.p2_name) Tie!")
+                    .font(.title)
+            }
+            
+            
             HStack(spacing: 40) {
                 VStack {
                     Text(gc.p1_name)
@@ -84,7 +96,17 @@ struct GameView: View {
                 VStack(alignment: .trailing) {
                     Text("Speed:")
                         .font(.headline)
-                    Text("\(gc.speed) cm/s")
+                    Text(String(format: "%.2f  cm/s", gc.speed))
+                }
+                Spacer()
+            }
+            
+            HStack {
+                Spacer()
+                VStack(alignment: .trailing) {
+                    Text("Angle:")
+                        .font(.headline)
+                    Text(String(format: "%.2f\u{00B0}", gc.goalAngle))
                 }
                 Spacer()
             }
@@ -138,7 +160,7 @@ struct GameView: View {
         .alert(isPresented: $showAlertP1) {
             Alert(
                 title: Text("\(gc.p1_name) Scored!"),
-                message: Text("Ignore if this is correct. \n Speed of Goal: \(gc.speed) cm/s"),
+                message: Text("Ignore if this is correct. \n Speed of Goal: \(gc.speed) cm/s \n Angle of Goal: \(gc.goalAngle)  /u00B0"),
                 dismissButton: .default(Text("Remove Score"), action: {
                     self.gc.addScoreToP1(true)
                 })
@@ -147,7 +169,7 @@ struct GameView: View {
         .alert(isPresented: $showAlertP2) {
             Alert(
                 title: Text("\(gc.p2_name) Scored!"),
-                message: Text("Ignore if this is correct. \n Speed of Goal: \(gc.speed) cm/s"),
+                message: Text("Ignore if this is correct. \n Speed of Goal: \(gc.speed) cm/s \n Angle of Goal: \(gc.goalAngle)  /u00B0"),
                 dismissButton: .default(Text("Remove Score"), action: {
                     self.gc.addScoreToP2(true)
                 })

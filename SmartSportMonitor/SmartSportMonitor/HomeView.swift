@@ -12,6 +12,7 @@ struct HomeView: View {
     @State var p1_name = ""
     @State var p2_name = ""
     @State var games: [Game] = []
+    @State var winningScore = 0
     @State private var isGameStarted = false
     @State private var isEnteringNames = false
     
@@ -99,8 +100,37 @@ struct HomeView: View {
                     .padding()
                     .cornerRadius(10)
                 
+                Text("Winning Score")
+                    .font(.title3)
+                    .foregroundColor(.secondary)
+
+                
+                Text("\(winningScore)")
+                    .font(.custom("SCOREBOARD", size: 120))
+                    .foregroundColor(.secondary)
+                
+                HStack {
+                    Button {
+                        winningScore += 1
+                    } label: {
+                        Image(systemName: "plus.square.fill")
+                            .font(.title)
+                            .foregroundColor(.secondary)
+                    }
+                    .buttonStyle(BorderlessButtonStyle())
+                    
+                    Button {
+                        winningScore -= 1
+                    } label: {
+                        Image(systemName: "minus.square.fill")
+                            .font(.title)
+                            .foregroundColor(.secondary)
+                    }
+                    .buttonStyle(BorderlessButtonStyle())
+                }
+                
                 Button {
-                    gc.startGame(p1_name: p1_name, p2_name: p2_name)
+                    gc.startGame(p1_name: p1_name, p2_name: p2_name, winningScore: winningScore)
                     isGameStarted = true
                     isEnteringNames = false
                 } label: {
@@ -115,7 +145,7 @@ struct HomeView: View {
                 
                 .cornerRadius(25)
                 .padding(.init(top: 30, leading: 0, bottom: 10, trailing: 0))
-                .presentationDetents([.fraction(0.4)])
+                .presentationDetents([.fraction(0.6)])
                 .presentationDragIndicator(.automatic)
             })
         }
